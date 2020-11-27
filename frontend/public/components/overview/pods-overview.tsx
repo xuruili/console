@@ -1,7 +1,7 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import { Alert, AlertActionLink } from '@patternfly/react-core';
 import {
@@ -107,7 +107,7 @@ const PodOverviewItem: React.FC<PodOverviewItemProps> = ({ pod }) => {
           <Status status={phase} />
         </span>
         <span className="col-xs-3 text-right">
-          <Link to={`${resourcePath(kind, name, namespace)}/logs`}>{t('public~View logs')}</Link>
+          <Link to={`${resourcePath(kind, name, namespace)}/logs`}>{t('overview~View logs')}</Link>
         </span>
       </div>
     </li>
@@ -156,41 +156,41 @@ export const PodsOverviewContent: React.SFC<PodsOverviewContentProps> = ({
     filteredPods = filteredPods.filter((pod) => !isPodWithoutImageId(pod));
   }
   filteredPods.sort(podCompare);
-
   const errorPodCount = _.size(_.filter(pods, (pod) => isPodError(pod)));
   const podsShown = Math.max(Math.min(errorPodCount, MAX_ERROR_PODS), MAX_PODS);
   const linkTo = allPodsLink || `${resourcePath(referenceFor(obj), name, namespace)}/pods`;
-  const emptyMessage = emptyText || t('public~No Pods found for this resource.');
-
-  const podAlert = showWaitingForBuildAlert ? (
-    <Alert
-      isInline
-      variant="info"
-      title={t('public~Waiting for the build')}
-      actionLinks={
-        <AlertActionLink onClick={() => setShowWaitingPods(!showWaitingPods)}>
-          {showWaitingPods
-            ? t('public~Hide waiting pods with errors')
-            : t('public~Show waiting pods with errors')}
-        </AlertActionLink>
-      }
-    >
-      {t(
-        'public~Waiting for the first build to run successfully. You may temporarily see "ImagePullBackOff" and "ErrImagePull" errors while waiting.',
-      )}
-    </Alert>
-  ) : null;
+  const emptyMessage = emptyText || t('overview~No Pods found for this resource.');
 
   return (
     <>
       <SidebarSectionHeading text={t('public~Pods')}>
         {_.size(pods) > podsShown && (
           <Link className="sidebar__section-view-all" to={linkTo}>
-            {t('public~View all {{podSize}}', { podSize: _.size(pods) })}
+            {t('overview~View all ({{podCount}})', { podCount: _.size(pods) })}
           </Link>
         )}
       </SidebarSectionHeading>
-      {buildConfigData?.loaded && !buildConfigData?.loadError && podAlert}
+      {showWaitingForBuildAlert ? (
+        <Alert
+          isInline
+          variant="info"
+          title={t('overview~Waiting for the Build')}
+          actionLinks={
+            <AlertActionLink onClick={() => setShowWaitingPods(!showWaitingPods)}>
+              {`${
+                showWaitingPods
+                  ? t('overview~Hide waiting Pods with errors')
+                  : t('overview~Show waiting Pods with errors')
+              } `}
+            </AlertActionLink>
+          }
+        >
+          <Trans i18nKey="overview~Waiting for the first Build to run successfully">
+            Waiting for the first Build to run successfully. You may temporarily see
+            "ImagePullBackOff" and "ErrImagePull" errors while waiting.
+          </Trans>
+        </Alert>
+      ) : null}
       {_.isEmpty(filteredPods) ? (
         <span className="text-muted">{loaded || !!loadError ? emptyMessage : <LoadingBox />}</span>
       ) : (

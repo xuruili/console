@@ -1,5 +1,6 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { ActionGroup, Button } from '@patternfly/react-core';
@@ -296,9 +297,12 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
     }
 
     render() {
+      const { t } = useTranslation();
       const { name, namespace, namespacedSet, safeResources, adminResources, rule } = this.props;
       const { verbControl, resourceControl, nonResourceURLs, APIGroups, role } = this.state;
-      const heading = `${rule === undefined ? 'Create' : 'Edit'} Access Rule`;
+
+      const heading =
+        rule === undefined ? t('edit-rule~Create access rule') : t('edit-rule~Edit access rule');
 
       return (
         <div className="co-m-pane edit-rule">
@@ -310,15 +314,18 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
             <div className="row">
               <div className="col-xs-12">
                 <p className="text-secondary">
-                  Each role is made up of a set of rules, which defines the type of access and
-                  resources that are allowed to be manipulated.
+                  {t(
+                    'edit-rule~Each role is made up of a set of rules, which defines the type of access and resources that are allowed to be manipulated.',
+                  )}
                 </p>
               </div>
             </div>
 
             <div className="row rule-row">
               <div className="col-xs-2">
-                <strong>{this.kind.label} Name</strong>
+                <strong>
+                  {this.kind.label} {t('edit-rule~Name')}
+                </strong>
               </div>
               <div className="col-xs-10">
                 <ResourceIcon kind={this.kind.kind} className="no-margin" /> {name}
@@ -328,7 +335,7 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
             {namespace && (
               <div className="row rule-row">
                 <div className="col-xs-2">
-                  <strong>Namespace</strong>
+                  <strong>{t('edit-rule~Namespace')}</strong>
                 </div>
                 <div className="col-xs-10">
                   <ResourceIcon kind="Namespace" className="no-margin" /> {namespace}
@@ -339,7 +346,7 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
 
             <div className="row rule-row">
               <div className="col-xs-2">
-                <strong>Type of Access</strong>
+                <strong>{t('edit-rule~Type of access')}</strong>
               </div>
               <div className="col-xs-10">
                 <RadioButton
@@ -347,24 +354,24 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
                   activeValue={verbControl}
                   onChange={this.set}
                   value={VERBS_ENUM.RO}
-                  label="Read-only (Default)"
-                  text="Users can view, but not edit"
+                  label={t('edit-rule~Read-only (default)')}
+                  text={t('edit-rule~Users can view, but not edit')}
                 />
                 <RadioButton
                   name="verbControl"
                   activeValue={verbControl}
                   onChange={this.set}
                   value={VERBS_ENUM.ALL}
-                  label="All"
-                  text="Full access to all actions, including deletion"
+                  label={t('edit-rule~All')}
+                  text={t('edit-rule~Full access to all actions, including deletion')}
                 />
                 <RadioButton
                   name="verbControl"
                   activeValue={verbControl}
                   onChange={this.set}
                   value={VERBS_ENUM.CUSTOM}
-                  label="Custom (Advanced)"
-                  text="Granular selection of actions"
+                  label={t('edit-rule~Custom (advanced)')}
+                  text={t('edit-rule~Granular selection of actions')}
                 />
               </div>
             </div>
@@ -373,7 +380,7 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
               <div className="col-xs-10">
                 <HRMinor />
                 <p>
-                  <strong>Actions</strong>
+                  <strong>{t('edit-rule~Actions')}</strong>
                 </p>
                 <div className="newspaper-columns">
                   {(namespace ? API_VERBS : ALL_VERBS).map((verb) => (
@@ -392,7 +399,7 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
 
             <div className="row rule-row">
               <div className="col-xs-2">
-                <strong>Allowed Resources</strong>
+                <strong>{t('edit-rule~Allowed resources')}</strong>
               </div>
 
               <div className="col-xs-10">
@@ -401,8 +408,8 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
                   activeValue={resourceControl}
                   onChange={this.set}
                   value={RESOURCE_ENUM.SAFE}
-                  label="Recommended (Default)"
-                  text="Curated resources ideal for most users"
+                  label={t('edit-rule~Recommended (default)')}
+                  text={t('edit-rule~Curated resources ideal for most users')}
                 />
 
                 <RadioButton
@@ -410,8 +417,8 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
                   activeValue={resourceControl}
                   onChange={this.set}
                   value={RESOURCE_ENUM.ALL}
-                  label="All Access"
-                  text="Full access, including admin resources"
+                  label={t('edit-rule~All access')}
+                  text={t('edit-rule~Full access, including admin resources')}
                 />
 
                 <RadioButton
@@ -419,8 +426,8 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
                   activeValue={resourceControl}
                   onChange={this.set}
                   value={RESOURCE_ENUM.CUSTOM}
-                  label="Custom"
-                  text="Granular selection of resources"
+                  label={t('edit-rule~Custom')}
+                  text={t('edit-rule~Granular selection of resources')}
                 />
 
                 {!namespace && (
@@ -430,8 +437,8 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
                       activeValue={resourceControl}
                       onChange={this.set}
                       value={RESOURCE_ENUM.NON}
-                      label="Non-resource URLs"
-                      text="API URLs that do not correspond to objects"
+                      label={t('edit-rule~Non-resource URLs')}
+                      text={t('edit-rule~API URLs that do not correspond to objects')}
                     />
                     <HelpText>
                       <input
@@ -439,7 +446,9 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
                         value={nonResourceURLs}
                         className="pf-c-form-control text-input"
                         onChange={(e) => this.setNonResourceURL(e.target.value)}
-                        placeholder="Comma separated list of non-resource urls (/apis/extensions/v1beta1)"
+                        placeholder={t(
+                          'edit-rule~Comma separated list of non-resource URLs (/apis/extensions/v1beta1)',
+                        )}
                       />
                     </HelpText>
                   </div>
@@ -452,7 +461,7 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
               <div className="col-xs-10">
                 <HRMinor />
                 <p>
-                  <strong>Safe Resources</strong>
+                  <strong>{t('edit-rule~Safe resources')}</strong>
                 </p>
                 <div className="newspaper-columns">
                   {safeResources ? (
@@ -478,7 +487,7 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
               <div className="col-xs-10">
                 <HRMinor />
                 <p>
-                  <strong>Admin Resources</strong>
+                  <strong>{t('edit-rule~Admin resources')}</strong>
                 </p>
                 <div className="newspaper-columns">
                   {adminResources ? (
@@ -503,9 +512,11 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
               <div className="col-xs-2" />
               <div className="col-xs-10">
                 <HRMinor />
-                <label htmlFor="api-groups">API Groups</label>
+                <label htmlFor="api-groups">{t('edit-rule~API groups')}</label>
                 <p className="text-secondary">
-                  Restrict this role to a subset of API URLs that don&rsquo;t correspond to objects.
+                  {t(
+                    "edit-rule~Restrict this role to a subset of API URLs that don't correspond to objects.",
+                  )}
                 </p>
 
                 <div>
@@ -515,7 +526,9 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
                     value={APIGroups}
                     className="pf-c-form-control text-input"
                     onChange={(e) => this.setApiGroups(e.target.value)}
-                    placeholder="Comma separated list of the api groups for the selected resources."
+                    placeholder={t(
+                      'edit-rule~Comma separated list of the api groups for the selected resources.',
+                    )}
                   />
                 </div>
               </div>
@@ -531,11 +544,11 @@ const EditRule = connect(stateToProps, { getResources: k8sActions.getResources }
                 >
                   <ActionGroup className="pf-c-form">
                     <Button type="submit" variant="primary" onClick={this.save}>
-                      Save
+                      {t('edit-rule~Save')}
                     </Button>
                     {role && (
                       <Button type="button" variant="secondary" onClick={history.goBack}>
-                        Cancel
+                        {t('edit-rule~Cancel')}
                       </Button>
                     )}
                   </ActionGroup>

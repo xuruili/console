@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { OverviewItem, usePluginsOverviewTabSection, usePodsWatcher } from '@console/shared';
 import PodRingSet from '@console/shared/src/components/pod/PodRingSet';
 import { JobModel } from '../../models';
@@ -12,6 +13,7 @@ const JobOverviewDetails: React.FC<JobOverviewDetailsProps> = ({ item }) => {
   const { obj: job } = item;
   const { namespace } = job.metadata;
   const { podData, loaded, loadError } = usePodsWatcher(job, 'Job', namespace);
+  const { t } = useTranslation();
   return (
     <div className="overview__sidebar-pane-body resource-overview__body">
       <div className="resource-overview__pod-counts">
@@ -20,12 +22,16 @@ const JobOverviewDetails: React.FC<JobOverviewDetailsProps> = ({ item }) => {
         </StatusBox>
       </div>
       <ResourceSummary resource={job} showPodSelector>
-        <DetailsItem label="Desired Completions" obj={job} path="spec.completions" />
-        <DetailsItem label="Parallelism" obj={job} path="spec.parallelism" />
-        <DetailsItem label="Active Deadline Seconds" obj={job} path="spec.activeDeadlineSeconds">
+        <DetailsItem label={t('overview~Desired completions')} obj={job} path="spec.completions" />
+        <DetailsItem label={t('overview~Parallelism')} obj={job} path="spec.parallelism" />
+        <DetailsItem
+          label={t('overview~Active deadline seconds')}
+          obj={job}
+          path="spec.activeDeadlineSeconds"
+        >
           {job.spec?.activeDeadlineSeconds
             ? pluralize(job.spec.activeDeadlineSeconds, 'second')
-            : 'Not Configured'}
+            : t('overview~Not configured')}
         </DetailsItem>
       </ResourceSummary>
     </div>

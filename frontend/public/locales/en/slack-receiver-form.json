@@ -11,6 +11,7 @@
   "URL": "URL",
   "Emoji": "Emoji",
   "The URL of the icon.": "The URL of the icon.",
+  "An emoji code to use in place of the default icon.": "An emoji code to use in place of the default icon.",
   "An <2></2> to use in place of the default icon.": "An <2></2> to use in place of the default icon.",
   "emoji code": "emoji code",
   "Username": "Username",

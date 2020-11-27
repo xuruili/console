@@ -1,0 +1,6 @@
+{
+  "Ungraphable results": "Ungraphable results",
+  "Query results include range vectors, which cannot be graphed. Try adding a function to transform the data.": "Query results include range vectors, which cannot be graphed. Try adding a function to transform the data.",
+  "The resulting dataset is too large to graph.": "The resulting dataset is too large to graph.",
+  "Displaying with reduced resolution due to large dataset.": "Displaying with reduced resolution due to large dataset."
+}

@@ -558,7 +558,7 @@ const QueryBrowser_: React.FC<QueryBrowserProps> = ({
   // For the default time span, use the first of the suggested span options that is at least as long
   // as defaultTimespan
   const defaultSpanText = spans.find((s) => parsePrometheusDuration(s) >= defaultTimespan);
-
+  const { t } = useTranslation();
   // If we have both `timespan` and `defaultTimespan`, `timespan` takes precedence
   const [span, setSpan] = React.useState(timespan || parsePrometheusDuration(defaultSpanText));
 
@@ -730,17 +730,18 @@ const QueryBrowser_: React.FC<QueryBrowserProps> = ({
 
   if (isRangeVector) {
     return (
-      <GraphEmptyState title="Ungraphable results">
-        Query results include range vectors, which cannot be graphed. Try adding a function to
-        transform the data.
+      <GraphEmptyState title={t('monitoring~Ungraphable results')}>
+        {t(
+          'monitoring~Query results include range vectors, which cannot be graphed. Try adding a function to transform the data.',
+        )}
       </GraphEmptyState>
     );
   }
 
   if (isDatasetTooBig) {
     return (
-      <GraphEmptyState title="Ungraphable results">
-        The resulting dataset is too large to graph.
+      <GraphEmptyState title={t('monitoring~Ungraphable results')}>
+        {t('monitoring~The resulting dataset is too large to graph.')}
       </GraphEmptyState>
     );
   }
@@ -791,7 +792,7 @@ const QueryBrowser_: React.FC<QueryBrowserProps> = ({
             <Alert
               isInline
               className="co-alert"
-              title="Displaying with reduced resolution due to large dataset."
+              title={t('monitoring~Displaying with reduced resolution due to large dataset.')}
               variant="info"
             />
           )}

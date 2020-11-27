@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { useTranslation } from 'react-i18next';
 import { DeploymentModel } from '../../models';
 import { DeploymentKind } from '../../module/k8s';
 import { DeploymentDetailsList, menuActions } from '../deployment';
@@ -13,6 +13,7 @@ import { OverviewItem } from '@console/shared';
 const DeploymentOverviewDetails: React.SFC<DeploymentOverviewDetailsProps> = ({
   item: { obj: d },
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="overview__sidebar-pane-body resource-overview__body">
       {d.spec.paused && <WorkloadPausedAlert obj={d} model={DeploymentModel} />}
@@ -21,16 +22,16 @@ const DeploymentOverviewDetails: React.SFC<DeploymentOverviewDetailsProps> = ({
       </div>
       <div className="resource-overview__summary">
         <ResourceSummary resource={d} showPodSelector showNodeSelector showTolerations>
-          <dt>Status</dt>
+          <dt>{t('overview~Status')}</dt>
           <dd>
             {d.status.availableReplicas === d.status.updatedReplicas ? (
-              'Active'
+              t('overview~Active')
             ) : (
               <div>
                 <span className="co-icon-space-r">
                   <LoadingInline />
                 </span>{' '}
-                Updating
+                {t('overview~Updating')}
               </div>
             )}
           </dd>

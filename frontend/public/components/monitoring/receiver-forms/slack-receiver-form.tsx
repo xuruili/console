@@ -142,7 +142,7 @@ export const Form: React.FC<FormProps> = ({ globals, formValues, dispatchFormCha
                     className="pf-c-form-control"
                     type="text"
                     aria-describedby="slack-icon-url-help"
-                    aria-label="The URL of the icon."
+                    aria-label={t('slack-receiver-form~The URL of the icon.')}
                     data-test-id="slack-icon-url"
                     value={formValues.slack_icon_url}
                     onChange={(e) =>
@@ -163,7 +163,9 @@ export const Form: React.FC<FormProps> = ({ globals, formValues, dispatchFormCha
                     className="pf-c-form-control"
                     type="text"
                     aria-describedby="slack-icon-emoji-help"
-                    aria-label="An emoji code to use in place of the default icon."
+                    aria-label={t(
+                      'slack-receiver-form~An emoji code to use in place of the default icon.',
+                    )}
                     name="slackIconEmoji"
                     data-test-id="slack-icon-emoji"
                     value={formValues.slack_icon_emoji}

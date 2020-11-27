@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import * as _ from 'lodash-es';
 import { LongArrowAltRightIcon } from '@patternfly/react-icons';
 
@@ -9,15 +10,17 @@ import { useRoutesWatcher, useServicesWatcher } from '@console/shared/src';
 
 const ServicePortList: React.SFC<ServicePortListProps> = ({ service }) => {
   const ports = _.get(service, 'spec.ports', []);
+  const { t } = useTranslation();
   return (
     <ul className="port-list">
       {_.map(ports, ({ name, port, protocol, targetPort }) => (
         <li key={name || `${protocol}/${port}`}>
-          <span className="text-muted">Service port:</span> {name || `${protocol}/${port}`}
+          <span className="text-muted">{t('overview~Service port:')}</span>{' '}
+          {name || `${protocol}/${port}`}
           &nbsp;
           <LongArrowAltRightIcon />
           &nbsp;
-          <span className="text-muted">Pod Port:</span> {targetPort}
+          <span className="text-muted">{t('overview~Pod port:')}</span> {targetPort}
         </li>
       ))}
     </ul>
@@ -44,10 +47,11 @@ const ServicesOverviewList: React.SFC<ServiceOverviewListProps> = ({ services })
 
 const RoutesOverviewListItem: React.SFC<RoutesOverviewListItemProps> = ({ route }) => {
   const { name, namespace } = route.metadata;
+  const { t } = useTranslation();
   return (
     <li className="list-group-item">
       <ResourceLink kind="Route" name={name} namespace={namespace} />
-      <span className="text-muted">{'Location: '}</span>
+      <span className="text-muted">{t('overview~Location: ')}</span>
       <RouteLocation obj={route} />
     </li>
   );
@@ -67,19 +71,19 @@ export const NetworkingOverview: React.SFC<NetworkingOverviewProps> = ({ obj }) 
     serviceResources.loaded && !serviceResources.loadError ? serviceResources.services : [];
   const routeResources = useRoutesWatcher(obj);
   const routes = routeResources.loaded && !routeResources.loadError ? routeResources.routes : [];
-
+  const { t } = useTranslation();
   return (
     <>
       <SidebarSectionHeading text="Services" />
       {_.isEmpty(services) ? (
-        <span className="text-muted">No Services found for this resource.</span>
+        <span className="text-muted">{t('overview~No Services found for this resource.')}</span>
       ) : (
         <ServicesOverviewList services={services} />
       )}
 
       <SidebarSectionHeading text="Routes" />
       {_.isEmpty(routes) ? (
-        <span className="text-muted">No Routes found for this resource.</span>
+        <span className="text-muted">{t('overview~No Routes found for this resource.')}</span>
       ) : (
         <RoutesOverviewList routes={routes} />
       )}

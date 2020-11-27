@@ -1,0 +1,9 @@
+{
+  "Select receiver type...": "Select receiver type...",
+  "invalid YAML": "invalid YAML",
+  "Error alertManagerBaseURL not set": "Error alertManagerBaseURL not set",
+  "alertmanager.v2.status.config.original not found.": "alertmanager.v2.status.config.original not found.",
+  "Error parsing Alertmanager config.original: {{errormessage}}": "Error parsing Alertmanager config.original: {{errormessage}}",
+  "Error loading ${alertManagerBaseURL}/api/v2/status/: {{emessage}}": "Error loading ${alertManagerBaseURL}/api/v2/status/: {{emessage}}",
+  "Alertmanager globals": "Alertmanager globals"
+}

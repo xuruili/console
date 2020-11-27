@@ -444,7 +444,7 @@ const ReceiverBaseForm: React.FC<ReceiverBaseFormProps> = ({
         <div className="form-group co-m-pane__dropdown">
           <label className="control-label co-required">{t('public~Receiver type')}</label>
           <Dropdown
-            title="Select receiver type..."
+            title={t('alert-manager-receiver-forms~Select receiver type...')}
             name="receiverType"
             items={receiverTypes}
             dropDownClassName="dropdown--full-width"
@@ -564,17 +564,24 @@ const ReceiverWrapper: React.FC<ReceiverFormsWrapperProps> = React.memo(({ obj, 
   const [alertmanagerGlobals, setAlertmanagerGlobals] = React.useState();
   const [loaded, setLoaded] = React.useState(false);
   const [loadError, setLoadError] = React.useState<APIError>();
-
+  const { t } = useTranslation();
+  const invalidYAMLMessage = t('alert-manager-receiver-forms~invalid YAML');
   React.useEffect(() => {
     if (!alertManagerBaseURL) {
-      setLoadError({ message: `Error alertManagerBaseURL not set` });
+      setLoadError({
+        message: t('alert-manager-receiver-forms~Error alertManagerBaseURL not set'),
+      });
       return;
     }
     coFetchJSON(`${alertManagerBaseURL}/api/v2/status/`)
       .then((data) => {
         const originalAlertmanagerConfigJSON = data?.config?.original;
         if (_.isEmpty(originalAlertmanagerConfigJSON)) {
-          setLoadError({ message: 'alertmanager.v2.status.config.original not found.' });
+          setLoadError({
+            message: t(
+              'alert-manager-receiver-forms~alertmanager.v2.status.config.original not found.',
+            ),
+          });
         } else {
           try {
             const { global } = safeLoad(originalAlertmanagerConfigJSON);
@@ -582,21 +589,31 @@ const ReceiverWrapper: React.FC<ReceiverFormsWrapperProps> = React.memo(({ obj, 
             setLoaded(true);
           } catch (error) {
             setLoadError({
-              message: `Error parsing Alertmanager config.original: ${error.message ||
-                'invalid YAML'}`,
+              message: t(
+                'alert-manager-receiver-forms~Error parsing Alertmanager config.original: {{errormessage}}',
+                { errormessage: error.message || invalidYAMLMessage },
+              ),
             });
           }
         }
       })
       .catch((e) =>
         setLoadError({
-          message: `Error loading ${alertManagerBaseURL}/api/v2/status/: ${e.message}`,
+          message: t(
+            'alert-manager-receiver-forms~Error loading ${alertManagerBaseURL}/api/v2/status/: {{emessage}}',
+            { emessage: e.message },
+          ),
         }),
       );
-  }, [alertManagerBaseURL]);
+  }, [alertManagerBaseURL, invalidYAMLMessage, t]);
 
   return (
-    <StatusBox {...obj} label="Alertmanager Globals" loaded={loaded} loadError={loadError}>
+    <StatusBox
+      {...obj}
+      label={t('alert-manager-receiver-forms~Alertmanager globals')}
+      loaded={loaded}
+      loadError={loadError}
+    >
       <ReceiverBaseForm {...props} obj={obj.data} alertmanagerGlobals={alertmanagerGlobals} />
     </StatusBox>
   );

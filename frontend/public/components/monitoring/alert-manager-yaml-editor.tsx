@@ -27,21 +27,29 @@ const AlertmanagerYAMLEditor: React.FC<AlertmanagerYAMLEditorProps> = ({ obj }) 
 
   const save = (yaml: string) => {
     if (_.isEmpty(yaml)) {
-      setErrorMsg('Alertmanager configuration cannot be empty.');
+      setErrorMsg(t('alert-manager-yaml-editor~Alertmanager configuration cannot be empty.'));
       setSuccessMsg('');
       return;
     }
     try {
       safeLoad(yaml);
     } catch (e) {
-      setErrorMsg(`Error parsing Alertmanager YAML: ${e}`);
+      setErrorMsg(
+        t('alert-manager-yaml-editor~Error parsing Alertmanager YAML: {{error}}', { error: e }),
+      );
       setSuccessMsg('');
       return;
     }
     patchAlertmanagerConfig(secret, yaml).then(
       (newSecret) => {
         setSuccessMsg(
-          `${newSecret.metadata.name} has been updated to version ${newSecret.metadata.resourceVersion}`,
+          t(
+            'alert-manager-yaml-editor~{{metadataname}} has been updated to version {{metadataresourceVersion}}',
+            {
+              metadataname: newSecret.metadata.name,
+              metadataresourceVersion: newSecret.metadata.resourceVersion,
+            },
+          ),
         );
         setErrorMsg('');
       },
@@ -58,7 +66,7 @@ const AlertmanagerYAMLEditor: React.FC<AlertmanagerYAMLEditorProps> = ({ obj }) 
         isInline
         className="co-alert co-alert--scrollable"
         variant="danger"
-        title="An error occurred"
+        title={t('alert-manager-yaml-editor~An error occurred')}
       >
         <div className="co-pre-line">{loadErrorMsg}</div>
       </Alert>
@@ -82,7 +90,7 @@ const AlertmanagerYAMLEditor: React.FC<AlertmanagerYAMLEditorProps> = ({ obj }) 
             isInline
             className="co-alert co-alert--scrollable"
             variant="danger"
-            title="An error occurred"
+            title={t('alert-manager-yaml-editor~An error occurred')}
           >
             <div className="co-pre-line">{errorMsg}</div>
           </Alert>

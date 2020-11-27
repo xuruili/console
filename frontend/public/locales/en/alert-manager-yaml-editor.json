@@ -1,0 +1,6 @@
+{
+  "Alertmanager configuration cannot be empty.": "Alertmanager configuration cannot be empty.",
+  "Error parsing Alertmanager YAML: {{error}}": "Error parsing Alertmanager YAML: {{error}}",
+  "{{metadataname}} has been updated to version {{metadataresourceVersion}}": "{{metadataname}} has been updated to version {{metadataresourceVersion}}",
+  "An error occurred": "An error occurred"
+}

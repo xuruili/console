@@ -1,5 +1,6 @@
 import * as _ from 'lodash-es';
 import * as React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { SyncAltIcon } from '@patternfly/react-icons';
 import { Button } from '@patternfly/react-core';
 import { LogSnippet, Status, StatusIconAndText, BuildConfigOverviewItem } from '@console/shared';
@@ -11,16 +12,68 @@ import { BuildConfigModel } from '../../models';
 import { BuildPhase, startBuild } from '../../module/k8s/builds';
 import { ResourceLink, SidebarSectionHeading, useAccessReview } from '../utils';
 
-const conjugateBuildPhase = (phase: BuildPhase): string => {
+const ConjugateBuildPhaseMessage = ({ build }): React.ReactNode => {
+  const {
+    status: { phase },
+  } = build;
   switch (phase) {
     case BuildPhase.Cancelled:
-      return 'was cancelled';
+      return (
+        <>
+          <Trans i18nKey="overview~BuildCancelledPhase">
+            Build <BuildNumberLink build={build} /> was cancelled
+          </Trans>
+        </>
+      );
+    case BuildPhase.Complete:
+      return (
+        <>
+          <Trans i18nKey="overview~BuildCompletePhase">
+            Build <BuildNumberLink build={build} /> is complete
+          </Trans>
+        </>
+      );
     case BuildPhase.Error:
-      return 'encountered an error';
+      return (
+        <>
+          <Trans i18nKey="overview~BuildEncounteredErrorPhase">
+            Build <BuildNumberLink build={build} /> encountered an error
+          </Trans>
+        </>
+      );
     case BuildPhase.Failed:
-      return 'failed';
+      return (
+        <>
+          <Trans i18nKey="overview~BuildFailedPhase">
+            Build <BuildNumberLink build={build} /> failed
+          </Trans>
+        </>
+      );
+    case BuildPhase.Running:
+      return (
+        <>
+          <Trans i18nKey="overview~BuildRunningPhase">
+            Build <BuildNumberLink build={build} /> is running
+          </Trans>
+        </>
+      );
+    case BuildPhase.Pending:
+      return (
+        <>
+          <Trans i18nKey="overview~BuildPendingPhase">
+            Build <BuildNumberLink build={build} /> is pending
+          </Trans>
+        </>
+      );
+
     default:
-      return `is ${_.toLower(phase)}`;
+      return (
+        <>
+          <Trans i18nKey="overview~BuildNewPhase">
+            Build <BuildNumberLink build={build} /> is new
+          </Trans>
+        </>
+      );
   }
 };
 
@@ -41,7 +94,7 @@ const BuildOverviewItem: React.SFC<BuildOverviewListItemProps> = ({ build }) => 
 
   const statusTitle = (
     <div>
-      Build <BuildNumberLink build={build} /> {conjugateBuildPhase(phase)}
+      {ConjugateBuildPhaseMessage({ build })}
       {lastUpdated && (
         <>
           {' '}
@@ -94,7 +147,7 @@ const BuildOverviewList: React.SFC<BuildOverviewListProps> = ({ buildConfig }) =
       errorModal({ error });
     });
   };
-
+  const { t } = useTranslation();
   return (
     <ul className="list-group">
       <li className="list-group-item build-overview__item">
@@ -105,7 +158,7 @@ const BuildOverviewList: React.SFC<BuildOverviewListProps> = ({ buildConfig }) =
           {canStartBuild && (
             <div>
               <Button variant="secondary" onClick={onClick}>
-                Start Build
+                {t('overview~Start Build')}
               </Button>
             </div>
           )}
@@ -113,7 +166,7 @@ const BuildOverviewList: React.SFC<BuildOverviewListProps> = ({ buildConfig }) =
       </li>
       {_.isEmpty(builds) ? (
         <li className="list-group-item">
-          <span className="text-muted">No Builds found for this Build Config.</span>
+          <span className="text-muted">{t('overview~No Builds found for this BuildConfig.')}</span>
         </li>
       ) : (
         _.map(builds, (build) => <BuildOverviewItem key={build.metadata.uid} build={build} />)
@@ -123,13 +176,14 @@ const BuildOverviewList: React.SFC<BuildOverviewListProps> = ({ buildConfig }) =
 };
 
 export const BuildOverview: React.SFC<BuildConfigsOverviewProps> = ({ buildConfigs }) => {
+  const { t } = useTranslation();
   if (_.isEmpty(buildConfigs)) {
     return null;
   }
 
   return (
     <div className="build-overview">
-      <SidebarSectionHeading text="Builds" />
+      <SidebarSectionHeading text={t('overview~Builds')} />
       {_.map(buildConfigs, (buildConfig) => (
         <BuildOverviewList key={buildConfig.metadata.uid} buildConfig={buildConfig} />
       ))}
